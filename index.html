@@ -1,0 +1,143 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>BALLOONS!!</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+
+  <style type="text/css">
+    canvas{
+      display:block;
+      border: 1px solid red;
+      text-align: center;
+      margin:100px auto 0 auto;
+    }
+
+  </style>
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+
+  <a href="#" onclick="function(){stop=true}">STOP</a>
+
+  <canvas id="myCanvas" ></canvas>
+
+  <script>
+    var c = document.getElementById('myCanvas');
+    c.width = 800;
+    c.height = 600;
+    var ctx = c.getContext('2d');
+    ctx.font = "50px Arial";
+
+    var balloon = {
+      x: 0,
+      y: 0,
+      image: new Image(),
+    }
+    balloon.image.src = "blueballoon.png";
+    console.log('balloon', balloon)
+    // balloon.addEventListener('load', render)
+
+
+    $(document).ready(() => {
+      console.log('document ready')
+      startAnimating(3);
+    })
+
+    var stop = false;
+    var frameCount = 0;
+    var fps, fpsInterval, startTime, now, then, elapsed;
+
+    var rand = function(min, max) {
+      return Math.floor(Math.random() * max - min + 1) + min;
+    }
+
+    function startAnimating(fps) {
+        fpsInterval = 1000 / fps;
+        then = Date.now();
+        startTime = then;
+        console.log(startTime);
+        animate();
+    }
+
+
+    function animate() {
+
+      // stop
+      if (stop) {
+          return;
+      }
+
+      // request another frame
+      requestAnimationFrame(animate);
+
+      // calc elapsed time since last loop
+      now = Date.now();
+      elapsed = now - then;
+
+      // if enough time has elapsed, draw the next frame
+      if (elapsed > fpsInterval) {
+          then = now - (elapsed % fpsInterval);
+
+          // draw stuff here
+          console.log('rendering')
+          //clear screen
+          ctx.clearRect(0, 0, c.width, c.height);
+
+          // Create gradient
+          var grd = ctx.createRadialGradient(75,50,rand(0,800),rand(0,600),rand(0,100),100);
+          grd.addColorStop(0,"red");
+          grd.addColorStop(1,"blue");
+
+          // Fill with gradient
+          ctx.fillStyle = grd;
+          ctx.fillRect(0,0,800,600);
+
+          //draw balloons
+          ctx.drawImage(balloon.image,rand(0, 800), rand(0, 600))
+          ctx.drawImage(balloon.image,rand(0, 800), rand(0, 600))
+          ctx.drawImage(balloon.image,rand(0, 800), rand(0, 600))
+
+          //text
+          ctx.textAlign="center";
+          ctx.fillStyle="black"
+          ctx.fillText("BALLOONS!!", 400, 150);
+
+          // TESTING...Report #seconds since start and achieved fps.
+          // var sinceStart = now - startTime;
+          // var currentFps = Math.round(1000 / (sinceStart / ++frameCount) * 100) / 100;
+          // $results.text("Elapsed time= " + Math.round(sinceStart / 1000 * 100) / 100 + " secs @ " + currentFps + " fps.");
+
+      }
+
+
+    }
+
+
+
+
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
